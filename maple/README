@@ -1,0 +1,6 @@
+with the latest version of maple, maple always seems
+to start in the  home directory so current directory 
+needs to be specified manually. Otherwise, run with
+
+   restart; read("marc_avila.map");
+

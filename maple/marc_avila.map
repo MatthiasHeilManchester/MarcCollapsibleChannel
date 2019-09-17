@@ -1,0 +1,440 @@
+with(plots):
+with(LinearAlgebra):
+with(plottools): 
+interface(echo=4);
+ 	
+
+currentdir("/home/mheil/MarcAvila");
+
+# Tweak parameters for length
+beta_up:=1/4;
+beta_dn:=1/4;
+
+
+#=================================================================
+# Linear oscillator model for Marc's problem.
+#=================================================================
+
+#-------------------------------------------------------------------
+# Parameters used in paper
+#-------------------------------------------------------------------
+Marc_parameters:=[L_up=5,L_elast=10,L_dn=10,
+                  sigma_0=1e3,HoR=1e-2,H=1e6];
+
+#Marc_parameters:=[L_up=20,L_elast=10,L_dn=40,
+#                  sigma_0=1e3,HoR=1e-2,H=1e6];
+
+#=================================================================
+# Oliver's analysis vs. mine
+#=================================================================
+
+
+
+#-----------------------------------------------------------------
+# solve Det(oej_matrix) = 0 for z; then beta_oej = z^2. 
+#-----------------------------------------------------------------
+oej_matrix:=Matrix(4,4);
+oej_matrix[1,1]:=0;
+oej_matrix[1,2]:=1;
+oej_matrix[1,3]:=0;
+oej_matrix[1,4]:=1;
+
+oej_matrix[2,1]:=L1_hat*z;
+oej_matrix[2,2]:=-1;
+oej_matrix[2,3]:=L1_hat*z;
+oej_matrix[2,4]:=1;
+
+oej_matrix[3,1]:=sinh(z);
+oej_matrix[3,2]:=cosh(z);
+oej_matrix[3,3]:=-sin(z);
+oej_matrix[3,4]:=cos(z);
+
+oej_matrix[4,1]:=sinh(z)+L2_hat*z*cosh(z);
+oej_matrix[4,2]:=cosh(z)+L2_hat*z*sinh(z);
+oej_matrix[4,3]:=sin(z)+L2_hat*z*cos(z);
+oej_matrix[4,4]:=-cos(z)+L2_hat*z*sin(z);
+
+
+#-----------------------------------------------------------------
+# Here's my approximation: L{1,2}_hat = L{up,dn}/L_elast
+#-----------------------------------------------------------------
+beta_approx:=sqrt(12*(L1_hat+L2_hat)/(L1_hat*L2_hat));
+beta_approx_tweak_1_o_1:=sqrt(12*(2+L1_hat+L2_hat)/((1+L1_hat)*(1+L2_hat)));
+beta_approx_tweak_1_o_2:=sqrt(12*(1+L1_hat+L2_hat)/((1/2+L1_hat)*(1/2+L2_hat)));
+beta_approx_tweak_1_o_3:=sqrt(12*(2/3+L1_hat+L2_hat)/((1/3+L1_hat)*(1/3+L2_hat)));
+beta_approx_tweak_1_o_4:=sqrt(12*(1/2+L1_hat+L2_hat)/((1/4+L1_hat)*(1/4+L2_hat)));
+
+
+#-----------------------------------------------------------------
+# My approximation should be good for long upstream/downstream
+# channels. Compare by stretching them relative to Marc's geometry.
+# Plot alpha_eig.
+#-----------------------------------------------------------------
+count:=1;
+for stretch_factor from 1 by 1 to 20 do 
+    oej_params:=subs(Marc_parameters,
+      [L1_hat=L_up/L_elast*stretch_factor,L2_hat=L_dn/L_elast*stretch_factor]);
+    x_plot[count]:=stretch_factor;
+    test_det:=subs(oej_params,Determinant(oej_matrix));
+    beta_oej:=(fsolve(test_det=0,z=subs(oej_params,sqrt(beta_approx))))^2;
+    y_plot_oej[count]:=subs(Marc_parameters,
+                            (HoR*sigma_0*H/L_elast^4*beta_oej^2)^(1/4));
+
+    beta_mine:=evalf(subs(oej_params,beta_approx)); 
+    y_plot_mine[count]:=subs(Marc_parameters,
+                            (HoR*sigma_0*H/L_elast^4*beta_mine^2)^(1/4));
+
+    beta_mine_tweak_1_o_1:=evalf(subs(oej_params,beta_approx_tweak_1_o_1)); 
+    y_plot_mine_tweak_1_o_1[count]:=subs(Marc_parameters,
+                            (HoR*sigma_0*H/L_elast^4*beta_mine_tweak_1_o_1^1)^(1/4));
+
+    beta_mine_tweak_1_o_2:=evalf(subs(oej_params,beta_approx_tweak_1_o_2)); 
+    y_plot_mine_tweak_1_o_2[count]:=subs(Marc_parameters,
+                            (HoR*sigma_0*H/L_elast^4*beta_mine_tweak_1_o_2^2)^(1/4));
+
+    beta_mine_tweak_1_o_3:=evalf(subs(oej_params,beta_approx_tweak_1_o_3)); 
+    y_plot_mine_tweak_1_o_3[count]:=subs(Marc_parameters,
+                            (HoR*sigma_0*H/L_elast^4*beta_mine_tweak_1_o_3^2)^(1/4));
+
+    beta_mine_tweak_1_o_4:=evalf(subs(oej_params,beta_approx_tweak_1_o_4)); 
+    y_plot_mine_tweak_1_o_4[count]:=subs(Marc_parameters,
+                            (HoR*sigma_0*H/L_elast^4*beta_mine_tweak_1_o_4^2)^(1/4));
+    count:=count+1;
+end do;
+count:=count-1;
+x_seq := [seq(x_plot[i], i = 1 .. count)];
+y_seq_oej := [seq(y_plot_oej[i], i = 1 .. count)];
+oej_plot:=plot(x_seq,y_seq_oej,colour=green);
+y_seq_mine := [seq(y_plot_mine[i], i = 1 .. count)];
+mine_plot:=plot(x_seq,y_seq_mine,colour=red,labels=["stretch_factor","alpha_eig"]);
+y_seq_mine_tweak_1_o_1 := [seq(y_plot_mine_tweak_1_o_1[i], i = 1 .. count)];
+mine_plot_tweak_1_o_1:=plot(x_seq,y_seq_mine_tweak_1_o_1,colour=orange,labels=["stretch_factor","alpha_eig"]);
+y_seq_mine_tweak_1_o_2 := [seq(y_plot_mine_tweak_1_o_2[i], i = 1 .. count)];
+mine_plot_tweak_1_o_2:=plot(x_seq,y_seq_mine_tweak_1_o_2,colour=pink,labels=["stretch_factor","alpha_eig"]);
+y_seq_mine_tweak_1_o_3 := [seq(y_plot_mine_tweak_1_o_3[i], i = 1 .. count)];
+mine_plot_tweak_1_o_3:=plot(x_seq,y_seq_mine_tweak_1_o_3,colour=black,labels=["stretch_factor","alpha_eig"]);
+y_seq_mine_tweak_1_o_4 := [seq(y_plot_mine_tweak_1_o_4[i], i = 1 .. count)];
+mine_plot_tweak_1_o_4:=plot(x_seq,y_seq_mine_tweak_1_o_4,colour=blue,labels=["stretch_factor","alpha_eig"]);
+
+
+display(mine_plot,oej_plot,mine_plot_tweak_1_o_1,mine_plot_tweak_1_o_2,mine_plot_tweak_1_o_3,mine_plot_tweak_1_o_4);
+
+
+#@;
+
+#-----------------------------------------------------------------
+# Try to replicate Oliver's Fig. 2; not very good
+#-----------------------------------------------------------------
+beta_approx_log:=sqrt(12*(10^(log_L1_hat)+10^(log_L2_hat))/
+                         (10^(log_L1_hat)*10^(log_L2_hat)));
+
+contourplot(beta_approx_log,
+        log_L1_hat=log10(0.01)..log10(100),
+        log_L2_hat=log10(0.01)..log10(100),
+        contours=[1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5]);
+
+
+#-----------------------------------------------------------------
+# Try to replicate Oliver's Fig. 2 with tweaked effective lengths: 
+# Better though not perfect.
+#-----------------------------------------------------------------
+beta_approx_log:=sqrt(12*  (beta_up+10^(log_L1_hat)  +  beta_dn+10^(log_L2_hat)) /
+                         ( (beta_up+10^(log_L1_hat)) * (beta_dn+10^(log_L2_hat)) ) );
+
+contourplot(beta_approx_log,
+        log_L1_hat=log10(0.01)..log10(100),
+        log_L2_hat=log10(0.01)..log10(100),
+        contours=[1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5]);
+
+
+
+
+
+
+#=================================================================
+# Here's my analysis
+#=================================================================
+
+
+#-------------------------------------------------------------------
+# Some integral needed in the hand-calculation (integral of assumed
+# membrane mode shape of normalised domain
+#-------------------------------------------------------------------
+K_integral:=int(4*x*(1-x),x=0..1);
+
+
+#-------------------------------------------------------------------
+# Displacement amplitude of membrane
+#-------------------------------------------------------------------
+Y(t):=Y_hat*exp(I*alpha^2*t);
+
+#-------------------------------------------------------------------
+# Pressure under membrane
+#-------------------------------------------------------------------
+p_under_membrane:=k*Y(t);
+
+#-------------------------------------------------------------------
+# Oscillatory pressure at inlet (L_total is non-dim on a)
+#-------------------------------------------------------------------
+p_inlet:=12*L_total*Reynolds*exp(I*alpha^2*t);
+
+#-------------------------------------------------------------------
+# Veloc in upstream bit
+#-------------------------------------------------------------------
+u_up(y,t):=f_up(y)*exp(I*alpha^2*t);
+
+#-------------------------------------------------------------------
+# Pressure gradient in upstream bit (L_up is non-dim on a)
+#-------------------------------------------------------------------
+dpdx_up(t):=(p_under_membrane-p_inlet)/(Beta_up*L_elast+L_up);
+
+
+#-------------------------------------------------------------------
+# ODE for upstream velocity profile
+#-------------------------------------------------------------------
+ode_up:=simplify((diff(u_up(y,t),t)+dpdx_up(t)-diff(u_up(y,t),y$2))/
+        exp(I*alpha^2*t));
+
+#-------------------------------------------------------------------
+# Solve the bloody thing
+#-------------------------------------------------------------------
+soln_up:=dsolve({ode_up,f_up(0)=0,f_up(1)=0},f_up(y));
+assign(soln_up);
+test_up_1:=simplify(subs(y=0,f_up(y)));
+test_up_2:=simplify(subs(y=1,f_up(y)));
+
+
+
+
+#-------------------------------------------------------------------
+# Veloc in downstream bit
+#-------------------------------------------------------------------
+u_dn(y,t):=f_dn(y)*exp(I*alpha^2*t);
+
+#-------------------------------------------------------------------
+# Pressure gradient in downstream bit (L_dn is non-dim on a)
+#-------------------------------------------------------------------
+dpdx_dn(t):=(0-p_under_membrane)/(Beta_dn*L_elast+L_dn);
+
+#-------------------------------------------------------------------
+# ODE for downstream velocity profile
+#-------------------------------------------------------------------
+ode_dn:=simplify((diff(u_dn(y,t),t)+dpdx_dn(t)-diff(u_dn(y,t),y$2))/
+        exp(I*alpha^2*t));
+
+
+#-------------------------------------------------------------------
+# Solve the bloody thing
+#-------------------------------------------------------------------
+soln_dn:=dsolve({ode_dn,f_dn(0)=0,f_dn(1)=0},f_dn(y));
+assign(soln_dn);
+test_dn_1:=simplify(subs(y=0,f_dn(y)));
+test_dn_2:=simplify(subs(y=1,f_dn(y)));
+
+
+
+
+
+#-------------------------------------------------------------------
+# Overall continuity
+#-------------------------------------------------------------------
+conti_eqn:=K*diff(Y(t),t)/exp(I*alpha^2*t)-
+        (int(f_up(y),y=0..1)-int(f_dn(y),y=0..1));
+
+#-------------------------------------------------------------------
+# Solve the bastard
+#-------------------------------------------------------------------
+y_hat:=solve(conti_eqn,Y_hat);
+
+
+
+
+
+for beta_tweak_factor in [0, 0.25] do
+
+#-------------------------------------------------------------------
+# Apply substitutions
+#-------------------------------------------------------------------
+Substitution_list:=[Beta_up=beta_tweak_factor,Beta_dn=beta_tweak_factor,
+                    k=8*HoR*sigma_0/L_elast^2*H,K=2/3*L_elast,
+                    L_total=L_up+L_elast+L_dn];
+
+simplified_y_hat:=simplify(subs(Substitution_list,y_hat));
+
+
+
+
+
+#-------------------------------------------------------------------
+# Now do a few plots...
+#-------------------------------------------------------------------
+
+
+#Loop over Reynolds numbers
+for re_for_plot from 10 by 10 to 200 do 
+
+Marc_parameters_with_reynolds:=[op(Marc_parameters),Reynolds=re_for_plot];
+
+
+#-------------------------------------------------------------------
+# Y_hat for Marc's values
+#-------------------------------------------------------------------
+y_hat_to_be_plotted:=subs(Marc_parameters_with_reynolds,simplified_y_hat);
+
+#-------------------------------------------------------------------
+# Inviscid eigenfrequency on viscous scale (omega)
+#-------------------------------------------------------------------
+inviscid_eigenfrequency:=subs(Substitution_list,
+        sqrt(k/K*(L_dn+L_up)/(L_dn*L_up)));
+
+#-------------------------------------------------------------------
+# Womersley number corresponding to inviscid eigenfrequency
+#-------------------------------------------------------------------
+inviscid_alpha_crit_to_be_plotted:=sqrt(evalf(subs(Marc_parameters,
+    inviscid_eigenfrequency)));
+
+#-------------------------------------------------------------------
+# Full eigenvalue problem (setting Reynolds to zero sets the
+# driving pressure to zero; we want non-trivial solutions, i.e.
+# values of alpha for which this expression is zero for non-zero 
+# Y_hat
+#-------------------------------------------------------------------
+eigenvalue_eqn:=simplify(
+   subs(Substitution_list,subs(Reynolds=0,conti_eqn)/Y_hat));
+
+eigenvalue_eqn_to_be_fsolved:=subs(Marc_parameters,eigenvalue_eqn);
+
+
+#-------------------------------------------------------------------
+# Solve the bastard, using the inviscid value as an initial guess
+#-------------------------------------------------------------------
+viscous_eigen_alpha:=fsolve(eigenvalue_eqn_to_be_fsolved,
+                     alpha=inviscid_alpha_crit_to_be_plotted);
+
+
+
+#-------------------------------------------------------------------
+# Plot amplitude
+#-------------------------------------------------------------------
+amplitude_plot[re_for_plot]:=
+logplot(abs(y_hat_to_be_plotted),alpha=6..16,y=1e-3..1e0,caption = 
+     typeset("Amplitude"),colour=red);
+
+# Add eigenfrequencies:
+Y_hat_max:=0.04;
+
+inviscid_resonance_plot := logplot([inviscid_alpha_crit_to_be_plotted, y, 
+                                 y = 0 .. Y_hat_max], colour = green);
+viscous_resonance_plot := logplot([Re(viscous_eigen_alpha), y, 
+                                y = 0 .. Y_hat_max], colour = blue);
+
+display(amplitude_plot[re_for_plot],inviscid_resonance_plot,viscous_resonance_plot);
+
+
+#-------------------------------------------------------------------
+# Plot phase
+#-------------------------------------------------------------------
+phase_plot:=
+plot(arctan(Im(y_hat_to_be_plotted),Re(y_hat_to_be_plotted)),
+     alpha=0..50,caption = typeset("Phase"));
+
+Phase_min:=-Pi;
+phase_inviscid_resonance_plot := 
+plot([inviscid_alpha_crit_to_be_plotted, y, y = Phase_min .. 0], 
+colour = green);
+
+phase_viscous_resonance_plot := 
+plot([Re(viscous_eigen_alpha), y, y = Phase_min .. 0], colour = blue);
+
+display(phase_plot,phase_inviscid_resonance_plot,phase_viscous_resonance_plot);
+
+
+end do;
+
+display(amplitude_plot[10], amplitude_plot[20], 
+        amplitude_plot[100], amplitude_plot[200]);
+
+
+
+
+for re in [10,20,100,200] do
+    bla := getdata(amplitude_plot[re]);
+    nname := cat(currentdir(),"/ampl_beta_tweak_factor",convert(beta_tweak_factor,string),"_re",convert(re,string),".dat");
+    ExportMatrix(nname, bla[3]);
+end do;
+
+end do;
+
+
+@;
+
+eigenvalue_eqn_to_be_plotted:=subs(Marc_parameters,eigenvalue_eqn);
+plot(abs(eigenvalue_eqn_to_be_plotted),alpha=0..50,caption = typeset("Eigenvalue eqn"));
+
+
+@;
+plot(arctan(Im(to_be_plotted),Re(to_be_plotted)),alpha=0..50,caption = typeset("Phase"));
+
+@;
+
+########### DIM VERSION #########################
+
+
+
+assume(rho,real);
+additionally(rho,positive);      
+assume(a,real);
+additionally(a,positive);      
+assume(nu,real);
+additionally(nu,positive);      
+assume(alpha,real);
+additionally(alpha,positive);      
+
+
+# Displacement amplitude of membrane
+Y(t):=Y_hat*exp(I*Omega*t);
+
+# Pressure under membrane
+p_under_membrane:=k*Y(t);
+
+# Pressure at inlet
+p_inlet:=P_0_hat*exp(I*Omega*t);
+
+# Veloc in upstream bit
+u_up(y,t):=f_up(y)*exp(I*Omega*t);
+
+# Pressure gradient in upstream bit
+dpdx_up(t):=(p_under_membrane-p_inlet)/L_up;
+
+# ODE for upstream velocity
+ode_up:=simplify((rho*diff(u_up(y,t),t)+dpdx_up(t)-mu*diff(u_up(y,t),y$2))/exp(I*Omega*t));
+
+soln_up:=dsolve({ode_up,f_up(0)=0,f_up(a)=0},f_up(y));
+assign(soln_up);
+test_up_1:=simplify(subs(y=0,f_up(y)));
+test_up_2:=simplify(subs(y=a,f_up(y)));
+
+# Veloc in downstream bit
+u_dn(y,t):=f_dn(y)*exp(I*Omega*t);
+
+# Pressure gradient in downstream bit
+dpdx_dn(t):=(0-p_under_membrane)/L_dn;
+
+# ODE for downstream velocity
+ode_dn:=simplify((rho*diff(u_dn(y,t),t)+dpdx_dn(t)-mu*diff(u_dn(y,t),y$2))/exp(I*Omega*t));
+
+soln_dn:=dsolve({ode_dn,f_dn(0)=0,f_dn(a)=0},f_dn(y));
+assign(soln_dn);
+test_dn_1:=simplify(subs(y=0,f_dn(y)));
+test_dn_2:=simplify(subs(y=a,f_dn(y)));
+
+
+
+# Overall continuity
+conti_eqn:=K*diff(Y(t),t)/exp(I*Omega*t)-(int(f_up(y),y=0..a)-int(f_dn(y),y=0..a));
+
+y_hat:=solve(conti_eqn,Y_hat);
+
+
+simplified_y_hat:=simplify(subs(Omega=alpha^2*nu/a^2,simplify(subs(mu=rho*nu,simplify(y_hat)))));
+
