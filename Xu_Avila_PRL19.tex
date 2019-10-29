@@ -118,15 +118,13 @@ between two rigid  sections~\cite{Jensen03,Heil11}.
 %investigated in channels nor in tubes.
 
 \begin{figure}
-	\includegraphics[width=1\linewidth, trim={0cm 0cm -0.35cm 0cm}, clip]{./epsFig/fig1a.eps}
+	%\includegraphics[width=1\linewidth, trim={0cm 0cm -0.35cm
+	%0cm}, clip]{./epsFig/fig1a.eps}
+\includegraphics[width=1\linewidth]{matthias_sketches/fig1.jpg}
 	\caption{\label{fig:setup}(Color online) Sketch of fluid
           flow in a collapsible channel with an externally pressurized
           membrane clamped between two rigid walls. The flow is driven
-          by a pulsatile pressure applied at the upstream end.
-          {\bf Kill label ``(a)'' ***}
-          {\bf *** Change channel width to $a$ ***}
-                    {\bf *** $l_{u} = L_{u}/a = 5$ etc ***}
-          {\bf *** State $p=0$ at outlet ***}}
+          by a pulsatile pressure applied at the upstream end.}
 \end{figure}
 
 In this \emph{Letter}, we study the dynamics of pulsatile,
@@ -180,7 +178,7 @@ influence the emerging flow patterns.
 
 We model the elastic segment as a thin, massless
 membrane (of thickness $\mathfrak{h}$ and Young's modulus $E$, subject to a
-pre-stress $T$) which deforms in
+pre-stress $\Sigma_0$) which deforms in
 response to the combined effects of the external pressure
 and the fluid traction. The resulting traction acting on the
 membrane, non-dimensionalised on Young's modulus, is given by
@@ -215,63 +213,51 @@ $\kappa = [(\partial^2 d_y/\partial {\xi^2})(1+\partial d_x/\partial
   {\xi}) - (\partial^2 d_y/\partial {{\xi}^2}) (\partial d_y/\partial
   {\xi})]/\Lambda$ the bending tensor, with $\Lambda=[(1+\partial
   d_x/\partial \xi)^2+(\partial d_y/\partial {\xi})^2]^{1/2}$.
-The pre-stress is non-dimensionalised on Young's modulus, $\sigma_0 = T/E$. 
-We solved the time-dependent fully-coupled fluid-structure 
-interaction problem with
+The pre-stress is non-dimensionalised on Young's modulus, 
+$\sigma_0 = \Sigma_0/E$. We solved the time-dependent fully-coupled 
+fluid-structure interaction problem with
 the open-source library {\tt oomph-lib} \cite{OOmph,heil2006}.
 All simulations shown in this study were performed using the
-dimensions shown in Fig. \ref{fig:setup}; the non-dimensional pre-stress
-and a membrane thickness were kept constant at $ \sigma_0 =10^3$ 
-and $h=10^{-2}$, respectively.
+dimensions shown in Fig. \ref{fig:setup}; the non-dimensional 
+membrane thickness was kept constant at $h=10^{-2}$.
 \begin{figure}
   \centering
-  {\bf *** Fig. (a) shows raw displacements; replot both on new timecale ***} \\
-\includegraphics[width=0.49\linewidth, trim={0.5cm 0.5cm 1.5cm 0.5cm}, clip]{./epsFig/fig2a.eps}
+\includegraphics[width=1.0\linewidth]{matthias_sketches/fig2.pdf}
+%\includegraphics[width=0.49\linewidth, trim={0.5cm 0.5cm 1.5cm 0.5cm}, clip]{./epsFig/fig2a.eps}
 %\includegraphics[width=0.49\linewidth, trim={0.5cm 0.5cm 1.5cm 0.5cm}, clip]{./epsFig/fig2b.ep}
   %\includegraphics[width=1\linewidth, trim={0.2cm 0cm 0cm 0cm},
   %clip]{./epsFig/fig1b.eps}
-  \includegraphics[width=1\linewidth]{./epsFig/fig1b.eps}
-\caption{\label{fig:extpressure}(Color online)  (a) Time trace of the vertical
-  displacement of the membrane mid-point, $y(t)$, for $\Rey=50$, $\omega=***$,
-  {\bf *** was $\Wo=15.81$, ***}
-  $Q=10^{-5}$,
-  and for three different external pressures ($p_\text{ext}=0.1$, $0.01$
-  and $0.005$). (b) The same data after subtracting the
-  time-averaged displacements $\overline{y}$ following the decay of the
-  initial transients ($\overline{y} = 0.877, 0.990$ and $0.996$,
-  respectively). {\bf *** Change y-axis labels accordingly ***}
-  (c-f) Contour of pressure
+%  \includegraphics[width=1\linewidth]{./epsFig/fig1b.eps}
+\caption{\label{fig:flow_fields_and_displacement}
+  (Color online)  (a)-(d) Contour of pressure
   and streamlines at four equally-spaced
   instants throughout the period of the time-periodic oscillation
-  following the decay of the initial transients for $p_\text{ext}=0.1$.
-  {\bf *** where are the additional
-    plots? *** }}
-  %(b) Decay time of initial transients $t_0$ at $P_\text{ext}=0.1$ and
-  %$Q= 10^{-5}$ as function of Reynolds number for $\Wo\in[0.32,
-  %  63.25]$. The dashed line shows the curve $0.423\,Re^{-1/6}$.}
+  following the decay of the initial transients for
+  $p_\text{ext}=***$. (e) Time trace of the vertical
+  displacement of the membrane mid-point, $y(t)$, for three different 
+  external pressures ($p_\text{ext}=***$, $***$
+  and $***$). (b) The same data after subtracting the
+  time-averaged displacements $\overline{y}$ following the decay of the
+  initial transients ($\overline{y} = ***, ***, ***$,
+  respectively). $\Rey=***$, $\alpha^2=***$, and
+  $H=***$ for all plots.}
 \end{figure}
-% Duo: Font size of the figures will be adjusted after we decide the position of the two panels to be left-right or top-bottom.
-% Marc:
-% Delete the inset in panel a
-% Use left-right arrengement
-% Use the same symbol for all data points in (b); ideally we would have simulations for a few selected Wo and show the symbols, but if we introduce St it becomes more confusing than it helps.
-% Duo: done.
-
 We start the simulations from an initial condition in
 which the membrane is undeformed and the velocity
 field is steady Poiseuille flow. For a sufficiently large external
 pressure the membrane is pushed inwards and, following 
 the decay of initial transients the system settles into a
 time-periodic (approximately harmonic) motion with the period of the
-forcing, $2\pi/\alpha^2$. {\bf *** BRIEFLY DISCUSS FLOW FIELDS OR
-  AT LEAST REFER TO THEM; POINT OUT THAT IT'S LARGE-AMPLITUDE,
-  NONLINEAR, STRONG FSI etc.***}
+forcing, $2\pi/\alpha^2$. Figs. \ref{fig:flow_fields_and_displacement}(a-d)
+show ... {\bf *** BRIEFLY DISCUSS FLOW FIELDS; POINT OUT THAT IT'S 
+LARGE-AMPLITUDE, NONLINEAR, STRONG FSI etc.***}
 
 We characterise the dynamics of the system by monitoring the vertical
 displacement {\bf *** CAREFUL ABOUT DISPLACEMENT VS. POSITION ***}
-of the membrane at its midpoint, $y(t)$.
-Fig.~\ref{fig:extpressure}(a) which shows time traces of this quantity
-for a range of external pressures. In Fig.~\ref{fig:extpressure}(b) we plot
+of the membrane at its midpoint, $y(t)$. 
+Fig.~\ref{fig:flow_fields_and_displacement}(e) shows time traces of this 
+quantity for a range of external pressures. In
+Fig.~\ref{fig:flow_fields_and_displacement}(f) we plot
 the same data but subtract the time-average displacement
 $\overline{y}$ following the decay of the initial transients. This shows
 that the amplitude of the time-periodic oscillation, $\widehat{y}$,
@@ -283,7 +269,7 @@ constant pressure gradient \cite{Tang15}.'' HOW CAN A CONSTANT
 PRESSURE
 GRADIENT GENERATED OSCILLATIONS; IF THEY'RE SELF-EXCITED THEN IT'S
 A TOTALLY DIFFERENT PROBLEM! DISCUSSED WITH MARC: WHAT'S MEANT IS THAT
-ONSET DEPENDS ON PEXT***}
+ONSET DEPENDS ON PEXT; BIT SUBTLE...***}
 The duration of the initial transients is on the order of the
 viscous time unit, $\nu/a^2$. This suggests
 that the adjustment toward a time-periodic oscillation is 
@@ -291,26 +277,29 @@ controlled by the viscosity of the fluid.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.49\linewidth, trim={0.3cm 0cm 1.75cm 1cm}, clip]{./epsFig/fig3a.eps}	
-\includegraphics[width=0.49\linewidth, trim={0.3cm 0cm 1.75cm 1cm}, clip]{./epsFig/fig3b.eps}
-\caption{\label{fig:amplitude_phase}(Color online) (a) Amplitude of
-  the steady-state oscillations, $\widehat{y}$, as a function of
-  $\omega$ for several $Re$ as indicated in the legend.
-  Here $p_\text{ext}=0.1$ and $H=***$. (b) Phase shift $\phi$ as a
-  function $\omega$. Symbols denote the simulation data and lines are
-  from the harmonic oscillator model, with eq.~\eqref{eq:channel_gain}
-  for $\widehat{y}$ and \eqref{eq:channel_phase} for $\phi$, respectively.}
+\includegraphics[width=1.0\linewidth]{maple/all_sigma0_times_H.png}	
+%\includegraphics[width=0.49\linewidth, trim={0.3cm 0cm 1.75cm 1cm}, clip]{./epsFig/fig3a.eps}	
+%\includegraphics[width=0.49\linewidth, trim={0.3cm 0cm 1.75cm 1cm}, clip]{./epsFig/fig3b.eps}
+\caption{\label{fig:amplitude_phase}(Color online) (a) Amplitude and
+  (b) phase shift of the steady-state oscillations as a function of
+  the dimensionless frequency parameter $\alpha$ {\bf ***$\alpha^2$ is
+  probably better as it represents the frequency***} for several
+  values of the Reynolds number $Re$ and $H$.
+  Here $p_\text{ext}=0.1$ and $\sigma_0=***$.
+  {\bf ** Split into (a) and (b) and use the real (oomph-lib!) data **}
+}
 \end{figure}
 
 We now focus on the dynamics of the steady-state oscillations following
 the decay of the transients. Fig.~\ref{fig:amplitude_phase}(a) shows the
 amplitude of the oscillations, $\widehat{y}$, against the
-non-dimensional forcing frequency $\alpha^2$ for five different
-Reynolds numbers while keeping $H = ****$ constant.
+non-dimensional forcing frequency $\alpha^2$ for different values of the
+parameters $Re$ and $H$ while keeping the pre-stress $\sigma_0$ constant.
 The amplitude of the membrane oscillation has a sharp maximum at
-$\alpha^2 \approx ***$, for all Reynolds numbers. Furthermore,
-the phase $\phi$ between the forcing pressure, $P(t)$, and $y(t)$ varies
-displays a $180^{o}$ phase shift when the amplitude reaches is maximum.
+$\alpha^2 \approx ***$, which appears to be independent of the 
+Reynolds number. Furthermore, the phase $\phi$ between the forcing 
+pressure, $P(t)$, and $y(t)$ varies displays a $180^{o}$ phase shift 
+when the amplitude reaches is maximum.
 
 This behaviour is reminiscent of the response of the forced damped
 harmonic oscillator...
@@ -366,7 +355,7 @@ p_{\rm m} = k Y(t),
 where the dimensionless constant $k$ is
 \be
 k = \frac{8 h \sigma_0 H}{l_{\rm m}^2}
-= \frac{T\mathfrak{h}a^3}{\rho \nu^2 L_{\rm m}^2}.
+= \frac{\Sigma_0 \mathfrak{h}a^3}{\rho \nu^2 L_{\rm m}^2}.
 \ee
 Since the pressure gradient in the upstream and downstream rigid
 segments is spatially constant, the momentum equation
@@ -391,19 +380,19 @@ rate of change in the volume of the elastic segment
 \be
 \int_0^{l_{\rm m}} \frac{\partial y_{\rm m}}{\partial t} \ {\rm d}x =
 \frac{{\rm d}Y}{{\rm d}t} \int_0^{l_{\rm m}} M(x) \ {\rm d}x  = 
-\frac{2}{3} l_{\rm m} \ \frac{{\rm d}Y}{{\rm d}t}.
+\frac{2}{3} \ l_{\rm m} \ \frac{{\rm d}Y}{{\rm d}t}.
 \ee
 is matched by the net volume flux from the rigid segments, so that
 \be
 \label{conti}
-\frac{2}{3} l_{\rm m}  \ \frac{{\rm d}Y}{{\rm d}t}
+\frac{2}{3} \ l_{\rm m}  \ \frac{{\rm d}Y}{{\rm d}t}
 = \int_0^1  (u_{\rm u} - u_{\rm d} ) \ {\rm d}y.
 \ee
 Equations (\ref{p_m}), (\ref{upstream_mom}), (\ref{downstream_mom})
 and (\ref{conti}) imply that the collapsible
 channel behaves like the linear oscillator sketched in 
 Fig. \ref{***}(b): The elastic membrane of length $l_{\rm m}$
-is equivalent to a piston of width $2/3l_{\rm m}$, mounted on a spring
+is equivalent to a piston of width $\frac{2}{3}l_{\rm m}$, mounted on a spring
 of stiffness $k$. The piston is displaced by the net influx of
 fluid from the rigid segments and sets the fluid pressure acting at
 their internal boundaries. The system's oscillations are
@@ -425,7 +414,7 @@ Inserting $\widehat{U}_{\rm u/d}(y)$ into (\ref{conti}) then
 establishes a relation between $\widehat{P}$ and $\widehat{Y}$. Since the
 amplitude of the imposed oscillatory pressure fluctuation is related
 to the Reynolds number and the non-dimensional total channel length
-via $\widehat{P} = 12 l \Rey$ (cf. \ref{inflow_bc}), we obtain
+via $\widehat{P} = 12 l \Rey$ (cf. equation (\ref{inflow_bc})), we obtain
 the (complex) amplitude $\widehat{Y}$ of the membrane oscillation
 as a function of the channel geometry ($l_{\rm u}, l_{\rm m}, l_{\rm
   d}$) and the non-dimensional parameters $k$, $Re$ and $\alpha^2$.
@@ -452,8 +441,10 @@ the viscous shear stresses acting on the walls of the rigid segments.
 The remaining terms show that in the absence of viscous damping
 the system is a forced linear oscillator with eigenfrequency
 \be
-\alpha_{\rm eig}^2 = \frac{3}{2} \frac{k}{l_{\rm m}}
+\alpha_{\rm eig}^2 = \left( 
+\frac{3}{2} \frac{k}{l_{\rm m}}
 \frac{l_{\rm u} + l_{\rm d}}{l_{\rm u} l_{\rm d}}.
+\right)^{1/2}
 \ee
 While this basic model yields good qualitative agreement
 with the computational results, Fig. \ref{***} shows that
