@@ -146,7 +146,7 @@ between two rigid segments at the upper wall and is pressurized by an external
 pressure $P_\text{ext}$.
 
 The fluid motion is governed by the incompressible Navier--Stokes
-equations, which in dimensionless form read
+equations which, in dimensionless form, read
 \begin{equation}
 \dfrac{\partial {\bf u}}{\partial t} + {\bf u} \cdot \nabla {\bf
 u} = -\nabla  p + \nabla^2  {\bf u},\quad
@@ -177,8 +177,8 @@ downstream of the elastic membrane were chosen long enough not to
 influence the emerging flow patterns. 
 
 We model the elastic segment as a thin, massless
-membrane (of thickness $\mathfrak{h}$ and Young's modulus $E$, subject to a
-pre-stress $\Sigma_0$) which deforms in
+membrane (of dimensional thickness $\mathfrak{h}$ and Young's
+modulus $E$, subject to a dimensional pre-stress $\Sigma_0$) which deforms in
 response to the combined effects of the external pressure
 and the fluid traction. The resulting traction acting on the
 membrane, non-dimensionalised on Young's modulus, is given by
@@ -286,7 +286,8 @@ controlled by the viscosity of the fluid.
   probably better as it represents the frequency***} for several
   values of the Reynolds number $Re$ and $H$.
   Here $p_\text{ext}=0.1$ and $\sigma_0=***$.
-  {\bf ** Split into (a) and (b) and use the real (oomph-lib!) data **}
+  {\bf ** Split into (a) [for amplitude] and (b) [for phase shift]
+    and use the real (oomph-lib!) data **}
 }
 \end{figure}
 
@@ -298,7 +299,7 @@ parameters $Re$ and $H$ while keeping the pre-stress $\sigma_0$ constant.
 The amplitude of the membrane oscillation has a sharp maximum at
 $\alpha^2 \approx ***$, which appears to be independent of the 
 Reynolds number. Furthermore, the phase $\phi$ between the forcing 
-pressure, $P(t)$, and $y(t)$ varies displays a $180^{o}$ phase shift 
+pressure, $p_{\rm in}(t)$, and $y(t)$ displays a $180^{o}$ phase shift 
 when the amplitude reaches is maximum.
 
 This behaviour is reminiscent of the response of the forced damped
