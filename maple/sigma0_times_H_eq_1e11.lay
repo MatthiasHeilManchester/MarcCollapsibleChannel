@@ -1,8 +1,6 @@
 #!MC 1410
-$!VarSet |LFDSFN1| = '"ampl_beta_tweak_factor.25_sigma_h100000000.000000_re100.dat" "ampl_beta_tweak_factor.25_sigma_h1000000000.00000_re100.dat" "ampl_beta_tweak_factor.25_sigma_h100000000.000000_re150.dat" "ampl_beta_tweak_factor.25_sigma_h1000000000.00000_re150.dat" "ampl_beta_tweak_factor.25_sigma_h100000000.000000_re200.dat" "ampl_beta_tweak_factor.25_sigma_h1000000000.00000_re200.dat" "ampl_beta_tweak_factor.25_sigma_h100000000.000000_re50.dat" "ampl_beta_tweak_factor.25_sigma_h1000000000.00000_re50.dat" "ampl_beta_tweak_factor.25_sigma_h.10e12_re100.dat" "ampl_beta_tweak_factor.25_sigma_h.10e12_re150.dat" "ampl_beta_tweak_factor.25_sigma_h.10e12_re200.dat" "ampl_beta_tweak_factor.25_sigma_h.10e12_re50.dat" "ampl_beta_tweak_factor.25_sigma_h.1e11_re100.dat" "ampl_beta_tweak_factor.25_sigma_h.1e11_re150.dat" "ampl_beta_tweak_factor.25_sigma_h.1e11_re200.dat" "ampl_beta_tweak_factor.25_sigma_h.1e11_re50.dat"'
+$!VarSet |LFDSFN1| = '"ampl_beta_tweak_factor.25_sigma_h.10e12_re100.dat" "ampl_beta_tweak_factor.25_sigma_h.10e12_re150.dat" "ampl_beta_tweak_factor.25_sigma_h.10e12_re200.dat" "ampl_beta_tweak_factor.25_sigma_h.10e12_re50.dat" "inviscid_eigen_frequency_beta_tweak_factor.25_sigma_h.10e12_re100.dat" "inviscid_eigen_frequency_beta_tweak_factor.25_sigma_h.10e12_re150.dat" "inviscid_eigen_frequency_beta_tweak_factor.25_sigma_h.10e12_re200.dat" "inviscid_eigen_frequency_beta_tweak_factor.25_sigma_h.10e12_re50.dat" "phase_beta_tweak_factor.25_sigma_h.10e12_re100.dat" "phase_beta_tweak_factor.25_sigma_h.10e12_re150.dat" "phase_beta_tweak_factor.25_sigma_h.10e12_re200.dat" "phase_beta_tweak_factor.25_sigma_h.10e12_re50.dat" "viscous_eigen_frequency_beta_tweak_factor.25_sigma_h.10e12_re100.dat" "viscous_eigen_frequency_beta_tweak_factor.25_sigma_h.10e12_re150.dat" "viscous_eigen_frequency_beta_tweak_factor.25_sigma_h.10e12_re200.dat" "viscous_eigen_frequency_beta_tweak_factor.25_sigma_h.10e12_re50.dat"'
 $!VarSet |LFDSVL1| = '"V1" "V2"'
-$!VarSet |LFDSFN2| = '"Oscilation_amplitude_Re100_St_20190925.dat"'
-$!VarSet |LFDSVL2| = '"V1";"Wo" "V2";"G"'
 $!SetStyleBase Factory
 $!GlobalPaper 
   PaperSizeInfo
@@ -48,17 +46,6 @@ $!ReadDataSet  '|LFDSFN1|'
   VarNameList = '|LFDSVL1|'
 $!RemoveVar |LFDSVL1|
 $!RemoveVar |LFDSFN1|
-$!ReadDataSet  '|LFDSFN2|'
-  InitialPlotType = XYLine
-  IncludeText = No
-  IncludeGeom = No
-  ReadDataOption = Append
-  ResetStyle = No
-  AssignStrandIDs = Yes
-  VarLoadMode = ByName
-  VarNameList = '|LFDSVL2|'
-$!RemoveVar |LFDSVL2|
-$!RemoveVar |LFDSFN2|
 $!FrameLayout 
   ShowHeader = No
   HeaderColor = Red
@@ -77,7 +64,7 @@ $!FrameName  = 'Frame 001'
 $!GlobalTime 
   SolutionTime = 0
 $!DeleteLineMaps 
-$!ActiveLineMaps  =  [1-20]
+$!ActiveLineMaps  =  [1-16]
 $!GlobalLinePlot 
   DataLabels
     {
@@ -101,6 +88,7 @@ $!LineMap  [1]
   Lines
     {
     Color = Red
+    LineThickness = 0.4
     }
   Symbols
     {
@@ -127,6 +115,7 @@ $!LineMap  [2]
   Lines
     {
     Color = Green
+    LineThickness = 0.4
     }
   Symbols
     {
@@ -153,6 +142,7 @@ $!LineMap  [3]
   Lines
     {
     Color = Blue
+    LineThickness = 0.4
     }
   Symbols
     {
@@ -179,6 +169,7 @@ $!LineMap  [4]
   Lines
     {
     Color = Custom1
+    LineThickness = 0.4
     }
   Symbols
     {
@@ -205,6 +196,8 @@ $!LineMap  [5]
   Lines
     {
     Color = Custom3
+    LinePattern = DashDot
+    LineThickness = 0.4
     }
   Symbols
     {
@@ -231,6 +224,8 @@ $!LineMap  [6]
   Lines
     {
     Color = Purple
+    LinePattern = DashDot
+    LineThickness = 0.4
     }
   Symbols
     {
@@ -257,6 +252,8 @@ $!LineMap  [7]
   Lines
     {
     Color = Red
+    LinePattern = DashDot
+    LineThickness = 0.4
     }
   Symbols
     {
@@ -283,6 +280,8 @@ $!LineMap  [8]
   Lines
     {
     Color = Green
+    LinePattern = DashDot
+    LineThickness = 0.4
     }
   Symbols
     {
@@ -305,10 +304,13 @@ $!LineMap  [9]
     Zone = 9
     XAxisVar = 1
     YAxisVar = 2
+    YAxis = 2
     }
   Lines
     {
     Color = Blue
+    LinePattern = Dashed
+    LineThickness = 0.4
     }
   Symbols
     {
@@ -331,10 +333,13 @@ $!LineMap  [10]
     Zone = 10
     XAxisVar = 1
     YAxisVar = 2
+    YAxis = 2
     }
   Lines
     {
     Color = Custom1
+    LinePattern = Dashed
+    LineThickness = 0.4
     }
   Symbols
     {
@@ -357,10 +362,13 @@ $!LineMap  [11]
     Zone = 11
     XAxisVar = 1
     YAxisVar = 2
+    YAxis = 2
     }
   Lines
     {
     Color = Custom3
+    LinePattern = Dashed
+    LineThickness = 0.4
     }
   Symbols
     {
@@ -383,10 +391,13 @@ $!LineMap  [12]
     Zone = 12
     XAxisVar = 1
     YAxisVar = 2
+    YAxis = 2
     }
   Lines
     {
     Color = Purple
+    LinePattern = Dashed
+    LineThickness = 0.4
     }
   Symbols
     {
@@ -409,10 +420,13 @@ $!LineMap  [13]
     Zone = 13
     XAxisVar = 1
     YAxisVar = 2
+    YAxis = 2
     }
   Lines
     {
     Color = Red
+    LinePattern = DashDot
+    LineThickness = 0.4
     }
   Symbols
     {
@@ -439,6 +453,8 @@ $!LineMap  [14]
   Lines
     {
     Color = Green
+    LinePattern = DashDot
+    LineThickness = 0.4
     }
   Symbols
     {
@@ -465,6 +481,8 @@ $!LineMap  [15]
   Lines
     {
     Color = Blue
+    LinePattern = DashDot
+    LineThickness = 0.4
     }
   Symbols
     {
@@ -491,6 +509,8 @@ $!LineMap  [16]
   Lines
     {
     Color = Custom1
+    LinePattern = DashDot
+    LineThickness = 0.4
     }
   Symbols
     {
@@ -505,136 +525,54 @@ $!LineMap  [16]
   ErrorBars
     {
     Color = Custom1
-    }
-$!LineMap  [17]
-  Name = '&ZN&'
-  Assign
-    {
-    Zone = 17
-    XAxisVar = 1
-    YAxisVar = 2
-    }
-  Lines
-    {
-    Color = Custom3
-    LinePattern = Dashed
-    LineThickness = 0.4
-    }
-  Symbols
-    {
-    Color = Custom3
-    FillColor = Custom3
-    }
-  BarCharts
-    {
-    Color = Custom3
-    FillColor = Custom3
-    }
-  ErrorBars
-    {
-    Color = Custom3
-    }
-$!LineMap  [18]
-  Name = '&ZN&'
-  Assign
-    {
-    Zone = 18
-    XAxisVar = 1
-    YAxisVar = 2
-    }
-  Lines
-    {
-    Color = Purple
-    LinePattern = Dashed
-    LineThickness = 0.4
-    }
-  Symbols
-    {
-    Color = Purple
-    FillColor = Purple
-    }
-  BarCharts
-    {
-    Color = Purple
-    FillColor = Purple
-    }
-  ErrorBars
-    {
-    Color = Purple
-    }
-$!LineMap  [19]
-  Name = '&ZN&'
-  Assign
-    {
-    Zone = 19
-    XAxisVar = 1
-    YAxisVar = 2
-    }
-  Lines
-    {
-    Color = Red
-    LinePattern = Dashed
-    LineThickness = 0.4
-    }
-  Symbols
-    {
-    Color = Red
-    FillColor = Red
-    }
-  BarCharts
-    {
-    Color = Red
-    FillColor = Red
-    }
-  ErrorBars
-    {
-    Color = Red
-    }
-$!LineMap  [20]
-  Name = '&ZN&'
-  Assign
-    {
-    Zone = 20
-    XAxisVar = 1
-    YAxisVar = 2
-    }
-  Lines
-    {
-    Color = Green
-    LinePattern = Dashed
-    LineThickness = 0.4
-    }
-  Symbols
-    {
-    Color = Green
-    FillColor = Green
-    }
-  BarCharts
-    {
-    Color = Green
-    FillColor = Green
-    }
-  ErrorBars
-    {
-    Color = Green
     }
 $!XYLineAxis 
   DepXToYRatio = 1
+  GridArea
+    {
+    DrawBorder = Yes
+    }
 $!XYLineAxis 
   XDetail 1
     {
-    CoordScale = Log
-    RangeMin = 6
-    RangeMax = 50.004399999999996851
-    GRSpacing = 5
+    RangeMin = 0.0082150083035230636597
+    RangeMax = 50.004999178499168977
+    GRSpacing = 10
+    Title
+      {
+      TitleMode = UseText
+      Text = '<greek>a</greek>'
+      }
     }
 $!XYLineAxis 
   YDetail 1
     {
     CoordScale = Log
-    RangeMin = 4.6680688683409243822E-05
-    RangeMax = 1.8049478422929525756
-    GRSpacing = 0.2
+    RangeMin = 9.9999997473787516356E-06
+    RangeMax = 0.012680156446675028281
+    GRSpacing = 0.002
+    Title
+      {
+      TitleMode = UseText
+      Text = 'amplitude'
+      Offset = 9
+      }
+    }
+$!XYLineAxis 
+  YDetail 2
+    {
+    RangeMin = -3.0932507514953613281
+    RangeMax = 0.0066494037984870376853
+    GRSpacing = 0.5
+    Title
+      {
+      TitleMode = UseText
+      Text = 'phase'
+      }
+    AxisLine
+      {
+      AxisAlignment = WithGridMax
+      }
     }
 $!FrameControl ActivateByNumber
   Frame = 1

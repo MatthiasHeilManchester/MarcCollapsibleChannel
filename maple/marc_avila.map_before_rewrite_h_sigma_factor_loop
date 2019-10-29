@@ -282,17 +282,20 @@ y_hat:=solve(conti_eqn,Y_hat):
 #===================================================================
 
 
+
 #-------------------------------------------------------------------
 # Loop over sigma \times H factor
 #-------------------------------------------------------------------
-sigma_h_factor_exponent_index:=1;
-match_damping:=true; # false;
-sigma_h_factor_exponent_list:=[-8,-7,-6,-5,-4,-3,-2,-1,0,1];
-#-2,-1,0,1];
-for sigma_h_factor_exponent in sigma_h_factor_exponent_list do 
-
-sigma_h_factor:=(10^sigma_h_factor_exponent);
-sigma_h_factor_list[sigma_h_factor_exponent_index]:=sigma_h_factor;
+sigma_h_factor_index:=1;
+sigma_h_factor_list:=[0.01,0.1,1,2,5,7.5,10];
+#sigma_h_factor_list:=[0.00001,
+#                      0.0001,
+#                      0.001,
+#                      0.01,
+#                      0.1,
+#                      1.0,
+#                     10.0];
+for sigma_h_factor in sigma_h_factor_list do 
 
 
 #-------------------------------------------------------------------
@@ -319,7 +322,7 @@ simplified_y_hat:=simplify(subs(Substitution_list,y_hat));
 #-------------------------------------------------------------------
 #Loop over Reynolds numbers
 #-------------------------------------------------------------------
-re_list:=[50,100,150,200] ; # , 100, 150, 200];
+re_list:=[50, 100, 150, 200];
 for re_for_plot in re_list do 
 
 Marc_parameters_with_reynolds:=[op(Marc_parameters),Reynolds=re_for_plot];
@@ -386,39 +389,28 @@ marc_viscous_gain :=18*(L_up+L_elast+L_dn)*re_for_plot/
 #-------------------------------------------------------------------
 # Range for big plots
 #-------------------------------------------------------------------
-alpha_min_for_plot:=0; # 6;
+alpha_min_for_plot:=6;
 alpha_max_for_plot:=50; #30;
 y_hat_min_for_plot:=1.0e-5;
-y_hat_max_for_plot:=100.0; #1.0;
+y_hat_max_for_plot:=1.0;
 
 
 #-------------------------------------------------------------------
 # Get maximum amplitude
 #-------------------------------------------------------------------
-y_max:=-100000;
+y_max:=0;
 alpha_max:=-10000;
-nstep:=50000;
+nstep:=1000;
 d_alpha:=(alpha_max_for_plot-alpha_min_for_plot)/nstep;
 for alpha_test from alpha_min_for_plot by d_alpha to alpha_max_for_plot do
-  alpha_test_value:=alpha_test;
-  if alpha_test=0 then 
-     alpha_test_value:=d_alpha/10.0;
-     print("Changed alpha_test from 0 to ",alpha_test_value);
-  end if;
-  y_test:=evalf(subs(alpha=alpha_test_value,abs(y_hat_to_be_plotted)));
+  y_test:=evalf(subs(alpha=alpha_test,abs(y_hat_to_be_plotted)));
   #print("bla",alpha_test,y_test,y_max);
   if y_test>y_max then y_max:=y_test; alpha_max:=evalf(alpha_test); end if;
 end do;
 print("alpha_max,y_max=",alpha_max,y_max);
-alpha_maxx[sigma_h_factor_exponent_index][re_for_plot]:=alpha_max;
-y_at_alpha_maxx[sigma_h_factor_exponent_index][re_for_plot]:=y_max;
 
 
-
-# hierher overwrite
-y_hat_max_for_plot:=y_max;
-
-
+ 
 #-------------------------------------------------------------------
 # Log plot of "inviscid gain" (based on ODE model without damping).
 # Red for the most wrong.
@@ -467,49 +459,34 @@ Y_hat_max:=y_hat_max_for_plot;
 # Inviscid, same from Marc's ODE model and mine with zero viscosity
 # (red)
 #-------------------------------------------------------------------
-inviscid_resonance_plot[re_for_plot] := logplot([inviscid_alpha_crit_to_be_plotted, y, 
+inviscid_resonance_plot := logplot([inviscid_alpha_crit_to_be_plotted, y, 
                                  y = y_hat_min_for_plot .. y_hat_max_for_plot],
                                   colour = red, 
                                  linestyle=dash);
-
 #-------------------------------------------------------------------
 # Viscous from unforced solution of my model eqn (therefore green)
 #-------------------------------------------------------------------
-viscous_resonance_plot[re_for_plot] := logplot([Re(viscous_eigen_alpha), y, 
+viscous_resonance_plot := logplot([Re(viscous_eigen_alpha), y, 
                                  y = y_hat_min_for_plot .. y_hat_max_for_plot],
                                  colour = green,
                                  linestyle=dot);
 
-
-#-------------------------------------------------------------------
-# Max. amplitude from solution of my model eqn (therefore green)
-#-------------------------------------------------------------------
-y_max_plot := logplot([alpha_max, y, 
-                       y = y_hat_min_for_plot .. y_hat_max_for_plot],
-                       colour = green,
-                       linestyle=dashdot,thickness=4);
-
 #-------------------------------------------------------------------
 # Keep track
 #-------------------------------------------------------------------
-viscous_eigen_alpha_for_plot[sigma_h_factor_exponent_index][re_for_plot]:=
+viscous_eigen_alpha_for_plot[sigma_h_factor_index][re_for_plot]:=
 Re(viscous_eigen_alpha);
-#viscous_damping_for_plot[sigma_h_factor_exponent_index][re_for_plot] := 
-#Im(viscous_eigen_alpha);
-
 
 
 #-------------------------------------------------------------------
 # Find the damping factor that matches the "exact" max. amplitude
 #-------------------------------------------------------------------
-if match_damping then
 
 #-------------------------------------------------------------------
 # Where's the maximum attained? Exclude zero
 #-------------------------------------------------------------------
 alpha_max_gain:=0;
 all_alpha_max_gain := solve(diff(marc_viscous_gain, alpha) = 0, alpha);
-print("matched damping alpha: ",numelems([all_alpha_max_gain]));
 for i from 1 to numelems([all_alpha_max_gain]) do
     if all_alpha_max_gain[i] <> 0 then 
        alpha_max_gain:=all_alpha_max_gain[i];
@@ -533,9 +510,7 @@ for i from 1 to numelems([delta_damp_matched]) do
   test:=subs(delta_damp=val,max_viscous_gain);
   print("Matching delta_damp = ",val," matched value: ",test);
   if  val>0 then
-   if is(val,'real') then
-      positve_delta_damp_matched:=[op(positve_delta_damp_matched),val];
-   end if;
+    positve_delta_damp_matched:=[op(positve_delta_damp_matched),val];
   end if;
 end do;
 
@@ -563,13 +538,9 @@ end if;
 
 end do;
 
-minimum_delta_damp[sigma_h_factor_exponent_index][re_for_plot]:=min_delta_damp;
-print("Minimum delta damp: ",min_delta_damp);
 
-#-------------------------------------------------------------------
-# end if for matching damping
-#-------------------------------------------------------------------
-end if;
+minimum_delta_damp[sigma_h_factor_index][re_for_plot]:=min_delta_damp;
+print("Minimum delta damp: ",min_delta_damp);
 
 
 #-------------------------------------------------------------------
@@ -581,42 +552,30 @@ for delta_damp_index in delta_damp_list do
    ampl_plot:=display(ampl_plot,
                 viscous_gain_amplitude_plot[delta_damp_index][re_for_plot]);
 end do;  
-if match_damping then
 for i from 1 to n_pos_matched do
    ampl_plot:=display(ampl_plot,
                matched_viscous_gain_amplitude_plot[i][re_for_plot]);
 end do;
-end if;
-ampl_plot:=display(ampl_plot,inviscid_resonance_plot[re_for_plot],viscous_resonance_plot[re_for_plot],y_max_plot);
+ampl_plot:=display(ampl_plot,inviscid_resonance_plot,viscous_resonance_plot);
 print(display(ampl_plot));
+
 
 
 
 #-------------------------------------------------------------------
 # And zoom in near the maximum
 #-------------------------------------------------------------------
-alpha_min_zoom:=0.9*Re(viscous_eigen_alpha); # 0.1*alpha_max; # alpha_max-1.0;
-alpha_max_zoom:=1.1*Re(viscous_eigen_alpha); # 2*alpha_max; # alpha_max+1.0;
+alpha_min_zoom:=alpha_max-1.0;
+alpha_max_zoom:=alpha_max+1.0;
 y_min_zoom:=0.1 *y_max;
 y_max_zoom:=10.0*y_max;
-print("alpha_min/max_zoom = ",alpha_min_zoom," " ,alpha_max_zoom);
-print(zoom(ampl_plot, alpha_min_zoom..alpha_max_zoom,y_min_zoom..y_max_zoom));
-
-#-------------------------------------------------------------------
-# And zoom in near the maximum -- all the way down to zero
-#-------------------------------------------------------------------
-alpha_min_zoom:=0;
-alpha_max_zoom:=1.1*Re(viscous_eigen_alpha); # 2*alpha_max; # alpha_max+1.0;
-y_min_zoom:=0.1 *y_max;
-y_max_zoom:=10.0*y_max;
-print("alpha_min/max_zoom = ",alpha_min_zoom," " ,alpha_max_zoom);
 print(zoom(ampl_plot, alpha_min_zoom..alpha_max_zoom,y_min_zoom..y_max_zoom));
 
 
 #-------------------------------------------------------------------
 # Plot phase
 #-------------------------------------------------------------------
-phase_plot[re_for_plot]:=
+phase_plot:=
 plot(arctan(Im(y_hat_to_be_plotted),Re(y_hat_to_be_plotted)),
             alpha=0..alpha_max_for_plot,
             caption = typeset("Phase for Re=",re_for_plot,"; H x sigma_0 = ",
@@ -625,18 +584,17 @@ plot(arctan(Im(y_hat_to_be_plotted),Re(y_hat_to_be_plotted)),
 
 Phase_min:=-Pi;
 
-phase_inviscid_resonance_plot[re_for_plot] := 
+phase_inviscid_resonance_plot := 
 plot([inviscid_alpha_crit_to_be_plotted, y, y = Phase_min .. 0], 
 colour = red, linestyle=dash);
 
-phase_viscous_resonance_plot[re_for_plot] := 
+phase_viscous_resonance_plot := 
 plot([Re(viscous_eigen_alpha), y, y = Phase_min .. 0], 
 colour = green,linestyle=dot);
 
-print(display(phase_plot[re_for_plot],
-              phase_inviscid_resonance_plot[re_for_plot],
-              phase_viscous_resonance_plot[re_for_plot]));
-
+print(display(phase_plot,
+              phase_inviscid_resonance_plot,
+              phase_viscous_resonance_plot));
 
 
 #------------------------------------------------------------------
@@ -647,53 +605,16 @@ end do;
 
 
 #---------------------------------------------------
-# Output amplitude/gain for comparison with Marc's results
+# Output data for comparison with Marc's results
 #---------------------------------------------------
-actual_sigma_h:=subs(Marc_parameters,sigma_0*H*sigma_h_factor);
 for re in re_list do
     bla := getdata(amplitude_plot[re]);
     nname := cat(currentdir(),"/ampl_beta_tweak_factor",
-       convert(beta_tweak_factor,string),"_sigma_h",
-       convert(actual_sigma_h,string),"_re",convert(re,string),".dat");
+       convert(beta_tweak_factor,string),"_sigma_h_factor",
+       convert(sigma_h_factor,string),"_re",convert(re,string),".dat");
     ExportMatrix(nname, bla[3]);
 end do;
 
-
-#---------------------------------------------------
-# Output phase for comparison with Marc's results
-#---------------------------------------------------
-actual_sigma_h:=subs(Marc_parameters,sigma_0*H*sigma_h_factor);
-for re in re_list do
-    bla := getdata(phase_plot[re]);
-    nname := cat(currentdir(),"/phase_beta_tweak_factor",
-       convert(beta_tweak_factor,string),"_sigma_h",
-       convert(actual_sigma_h,string),"_re",convert(re,string),".dat");
-    ExportMatrix(nname, bla[3]);
-end do;
-
-#---------------------------------------------------
-# Output eigenfrequence from viscous model
-#---------------------------------------------------
-actual_sigma_h:=subs(Marc_parameters,sigma_0*H*sigma_h_factor);
-for re in re_list do
-    bla := getdata(viscous_resonance_plot[re]);
-    nname := cat(currentdir(),"/viscous_eigen_frequency_beta_tweak_factor",
-       convert(beta_tweak_factor,string),"_sigma_h",
-       convert(actual_sigma_h,string),"_re",convert(re,string),".dat");
-    ExportMatrix(nname, bla[3]);
-end do;
-
-#---------------------------------------------------
-# Output eigenfrequence from inviscid model
-#---------------------------------------------------
-actual_sigma_h:=subs(Marc_parameters,sigma_0*H*sigma_h_factor);
-for re in re_list do
-    bla := getdata(inviscid_resonance_plot[re]);
-    nname := cat(currentdir(),"/inviscid_eigen_frequency_beta_tweak_factor",
-       convert(beta_tweak_factor,string),"_sigma_h",
-       convert(actual_sigma_h,string),"_re",convert(re,string),".dat");
-    ExportMatrix(nname, bla[3]);
-end do;
 
 
 #---------------------------------------------------
@@ -706,8 +627,8 @@ end do;
 #---------------------------------------------------
 # End of loop over sigma_0 x H
 #---------------------------------------------------
-sigma_h_factor_exponent_index:=sigma_h_factor_exponent_index+1;
-print("sigma_h_factor_exponent_index",sigma_h_factor_exponent_index);
+sigma_h_factor_index:=sigma_h_factor_index+1;
+print("sigma_h_factor_index",sigma_h_factor_index);
 end do;
 
 
@@ -718,21 +639,18 @@ end do;
 # for numerical values)
 #---------------------------------------------------
 base_sigma0_H:=subs(Marc_parameters,sigma_0*H);
-if match_damping then
 for re in re_list do
-  damp_plot[re]:=loglogplot([seq([subs(base_sigma0_H*sigma_h_factor_list[i]),
-                                    minimum_delta_damp[i][re]],
-                            i = 1..numelems(sigma_h_factor_list))],
-                            labels=["sigma_0 H","delta_damp"]);
-  damp_plot_with_symbol[re]:=loglogplot(
-                            [seq([subs(base_sigma0_H*sigma_h_factor_list[i]),
-                                    minimum_delta_damp[i][re]],
+  damp_plot[re]:=plot([seq([subs(base_sigma0_H*sigma_h_factor_list[i]),
+                                 minimum_delta_damp[i][re]],
+                            i = 1..numelems(sigma_h_factor_list))]);
+  damp_plot_with_symbol[re]:=plot([seq([subs(base_sigma0_H*sigma_h_factor_list[i]),
+                                             minimum_delta_damp[i][re]],
                             i = 1..numelems(sigma_h_factor_list))],
                             style=point,symbol=circle,symbolsize=20);
 end do;
 display(seq(damp_plot[re], re in re_list),
         seq(damp_plot_with_symbol[re], re in re_list));
-end if;
+
 
 #---------------------------------------------------
 # Plot alpha_eig as fct of sigma0 x H (for all Reynolds
@@ -740,66 +658,25 @@ end if;
 # for numerical values)
 #---------------------------------------------------
 for re in re_list do
-  eigen_plot[re]:=loglogplot([seq([subs(base_sigma0_H*sigma_h_factor_list[i]),
-                                     viscous_eigen_alpha_for_plot[i][re]],
-                            i = 1..numelems(sigma_h_factor_list))],
-                            labels=["sigma_0 H","alpha_eig"]);
-  eigen_plot_with_symbol[re]:=loglogplot(
-                             [seq([subs(base_sigma0_H*sigma_h_factor_list[i]),
-                                     viscous_eigen_alpha_for_plot[i][re]],
+  eigen_plot[re]:=plot([seq([subs(base_sigma0_H*sigma_h_factor_list[i]),
+                                 viscous_eigen_alpha_for_plot[i][re]],
+                            i = 1..numelems(sigma_h_factor_list))]);
+  eigen_plot_with_symbol[re]:=plot([seq([subs(base_sigma0_H*sigma_h_factor_list[i]),
+                                 viscous_eigen_alpha_for_plot[i][re]],
                             i = 1..numelems(sigma_h_factor_list))],
                             style=point,symbol=circle,symbolsize=20);
-  y_max_plot[re]:=loglogplot([seq([subs(base_sigma0_H*sigma_h_factor_list[i]),
-                                    alpha_maxx[i][re]],
-                            i = 1..numelems(sigma_h_factor_list))],
-                            colour=blue);
 end do;
 display(seq(eigen_plot[re], re in re_list),
-        seq(eigen_plot_with_symbol[re], re in re_list),
-        seq(y_max_plot[re], re in re_list));
+        seq(eigen_plot_with_symbol[re], re in re_list));
 
-
-
-#---------------------------------------------------
-# Plot decay rate as fct of sigma0 x H (for all Reynolds
-# numbers)
-#---------------------------------------------------
-#for re in re_list do
-#  damping_plot[re]:=loglogplot([seq([subs(base_sigma0_H*sigma_h_factor_list[i]),
-#                                     viscous_damping_for_plot[i][re]],
-#                            i = 1..numelems(sigma_h_factor_list))],
-#                            labels=["sigma_0 H","delta_damp"]);
-#end do;
-#display(seq(damping_plot[re], re in re_list));
-
-
-
-
-#---------------------------------------------------
-# Output data for comparison with Marc's results
-#---------------------------------------------------
-if match_damping then
-for re in re_list do
-    bla := getdata(damp_plot[re]):
-    nname := cat(currentdir(),"/delta_damp_beta_tweak_factor",
-       convert(beta_tweak_factor,string),"_re",convert(re,string),".dat"):
-    ExportMatrix(nname, bla[3]):
-end do:
-for re in re_list do
-    bla := getdata(eigen_plot[re]):
-    nname := cat(currentdir(),"/eigen_alpha_beta_tweak_factor",
-       convert(beta_tweak_factor,string),"_re",convert(re,string),".dat"):
-    ExportMatrix(nname, bla[3]):
-end do:
-end if;
 
 
 
 #hierher
-#for sigma_h_factor_exponent in sigma_h_factor_exponent_list do;
+#for sigma_h_factor in sigma_h_factor_list do;
 #for re in re_list do;
-#  print("Re,sigma_h_factor_exponent, delta_damp: ",re,sigma_h_factor_exponent,
-#         minimum_delta_damp[sigma_h_factor_exponent][re]);
+#  print("Re,sigma_h_factor, delta_damp: ",re,sigma_h_factor,
+#         minimum_delta_damp[sigma_h_factor][re]);
 #end do;
 #end do;
 

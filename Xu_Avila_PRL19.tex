@@ -376,11 +376,11 @@ and
 respectively.
 The flows in the two rigid segments are coupled by
 mass conservation which requires that the
-rate of change in the volume of the elastic segment
+rate of change in the volume of the elastic segment,
 \be
 \int_0^{l_{\rm m}} \frac{\partial y_{\rm m}}{\partial t} \ {\rm d}x =
 \frac{{\rm d}Y}{{\rm d}t} \int_0^{l_{\rm m}} M(x) \ {\rm d}x  = 
-\frac{2}{3} \ l_{\rm m} \ \frac{{\rm d}Y}{{\rm d}t}.
+\frac{2}{3} \ l_{\rm m} \ \frac{{\rm d}Y}{{\rm d}t},
 \ee
 is matched by the net volume flux from the rigid segments, so that
 \be
@@ -391,7 +391,7 @@ is matched by the net volume flux from the rigid segments, so that
 Equations (\ref{p_m}), (\ref{upstream_mom}), (\ref{downstream_mom})
 and (\ref{conti}) imply that the collapsible
 channel behaves like the linear oscillator sketched in 
-Fig. \ref{***}(b): The elastic membrane of length $l_{\rm m}$
+Fig. \ref{model.png}(b): The elastic membrane of length $l_{\rm m}$
 is equivalent to a piston of width $\frac{2}{3}l_{\rm m}$, mounted on a spring
 of stiffness $k$. The piston is displaced by the net influx of
 fluid from the rigid segments and sets the fluid pressure acting at
@@ -423,6 +423,9 @@ lengthy and was performed with {\tt maple}. The results are
 shown by the ***ed lines in Fig. \ref{****} which show ****.
 {\bf *** MENTION THAT AMPLITUDE IS $|\widehat{Y}|$ AND PHASE
   ANGLE IS ITS ARGUMENT. ***}
+
+{\bf *** MENTION THAT ONLY PRODUCT OF $H$ and $\sigma_0$ MATTERS AND
+  INTERPRET ***}
 
  Additional insight can be gained by differentiating (\ref{conti})
 with respect to time and inserting $\partial u_{\rm u/d}/\partial t$
@@ -458,22 +461,51 @@ segment that participates in the oscillatory motion.
 
 
 {\bf *** Setting $\beta =  1/4$ works nicely (for our geometry)
-and gives perfect agreement with Oliver's theoretical predictions for
-the eigenfrequency.
-  Found this by trial and error. Can we make this the fitting
-  parameter? ***}
+and gives perfect (graphical) agreement with Oliver's theoretical 
+predictions for the eigenfrequency. Found this by trial and error. ***}
 
-\begin{figure}
+\clearpage
+
+Here are some comparisons that we could make:
+
+\begin{figure}[h]
 \includegraphics[width=0.99\linewidth]{maple/ampl_comparison.png}
-\caption{\label{comparison.png}Black solid: oomph-lib; red dash-dot:
-  basic model; green dashed: tweaked model with $\beta = 1/4$.}
+\caption{\label{ampl_comparison.png} {\tt maple/ampl\_comparison.lay} 
+Amplitude vs Womersley = $\alpha^2$. Solid lines: theory with 
+$\beta = 1/4$; thick dashed lines: {\tt oomph-lib}. Different values
+of $\sigma_0 H$ and $Re$. Other parameters held constant.}
+\end{figure}
+
+\begin{figure}[h]
+\includegraphics[width=0.99\linewidth]{maple/eigenfrequency_comparison.png}
+\caption{\label{eigenfrequency_comparison.png} {\tt maple/eigenfrequency\_comparison.lay} 
+Eigenfrequency vs  $\sigma_0 H$. Square markers:
+{\tt oomph-lib}. Triangular markers: theory with
+$\beta = 1/4$. Please redo computations this with different values of Re (rather
+than Q.} 
+\end{figure}
+
+\begin{figure}[h]
+\includegraphics[width=0.99\linewidth]{maple/damping_parameter_comparison.png}
+\caption{\label{damping_parameter_comparison.png} {\tt maple/damping\_parameter\_comparison.lay} 
+Damping parameter vs  $\sigma_0 H$. Solid lines with markers:
+{\tt oomph-lib} (but please check mesh/timestep convergence -- these
+are really delicate values!). Thick dashed line theory with 
+$\beta = 1/4$. Please redo computations this with different values of Re (rather
+than Q.}
+\end{figure}
+
+\begin{figure}[h]
+\includegraphics[width=0.99\linewidth]{matthias_sketches/resonance_matching_screenshot.png}
+\caption{\label{theory_results.png} Screenshot to explain 
+theoretical model and how damping was matched. Not sure we want/need
+this; would live in supplementary material.}
 \end{figure}
 
 
-{\bf *** We can make this look even better by plotting for a range of
-$H$ values; in fact, vary both $\sigma_0$ and $H$ and show that,
-as the theory (and common sense) predict, it's only the product
-of the two that matters! ***}
+
+
+\clearpage
 
 \newpage
 

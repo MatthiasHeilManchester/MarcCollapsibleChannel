@@ -467,19 +467,17 @@ Y_hat_max:=y_hat_max_for_plot;
 # Inviscid, same from Marc's ODE model and mine with zero viscosity
 # (red)
 #-------------------------------------------------------------------
-inviscid_resonance_plot[re_for_plot] := logplot([inviscid_alpha_crit_to_be_plotted, y, 
+inviscid_resonance_plot := logplot([inviscid_alpha_crit_to_be_plotted, y, 
                                  y = y_hat_min_for_plot .. y_hat_max_for_plot],
                                   colour = red, 
                                  linestyle=dash);
-
 #-------------------------------------------------------------------
 # Viscous from unforced solution of my model eqn (therefore green)
 #-------------------------------------------------------------------
-viscous_resonance_plot[re_for_plot] := logplot([Re(viscous_eigen_alpha), y, 
+viscous_resonance_plot := logplot([Re(viscous_eigen_alpha), y, 
                                  y = y_hat_min_for_plot .. y_hat_max_for_plot],
                                  colour = green,
                                  linestyle=dot);
-
 
 #-------------------------------------------------------------------
 # Max. amplitude from solution of my model eqn (therefore green)
@@ -494,8 +492,7 @@ y_max_plot := logplot([alpha_max, y,
 #-------------------------------------------------------------------
 viscous_eigen_alpha_for_plot[sigma_h_factor_exponent_index][re_for_plot]:=
 Re(viscous_eigen_alpha);
-#viscous_damping_for_plot[sigma_h_factor_exponent_index][re_for_plot] := 
-#Im(viscous_eigen_alpha);
+
 
 
 
@@ -587,8 +584,9 @@ for i from 1 to n_pos_matched do
                matched_viscous_gain_amplitude_plot[i][re_for_plot]);
 end do;
 end if;
-ampl_plot:=display(ampl_plot,inviscid_resonance_plot[re_for_plot],viscous_resonance_plot[re_for_plot],y_max_plot);
+ampl_plot:=display(ampl_plot,inviscid_resonance_plot,viscous_resonance_plot,y_max_plot);
 print(display(ampl_plot));
+
 
 
 
@@ -616,7 +614,7 @@ print(zoom(ampl_plot, alpha_min_zoom..alpha_max_zoom,y_min_zoom..y_max_zoom));
 #-------------------------------------------------------------------
 # Plot phase
 #-------------------------------------------------------------------
-phase_plot[re_for_plot]:=
+phase_plot:=
 plot(arctan(Im(y_hat_to_be_plotted),Re(y_hat_to_be_plotted)),
             alpha=0..alpha_max_for_plot,
             caption = typeset("Phase for Re=",re_for_plot,"; H x sigma_0 = ",
@@ -625,18 +623,17 @@ plot(arctan(Im(y_hat_to_be_plotted),Re(y_hat_to_be_plotted)),
 
 Phase_min:=-Pi;
 
-phase_inviscid_resonance_plot[re_for_plot] := 
+phase_inviscid_resonance_plot := 
 plot([inviscid_alpha_crit_to_be_plotted, y, y = Phase_min .. 0], 
 colour = red, linestyle=dash);
 
-phase_viscous_resonance_plot[re_for_plot] := 
+phase_viscous_resonance_plot := 
 plot([Re(viscous_eigen_alpha), y, y = Phase_min .. 0], 
 colour = green,linestyle=dot);
 
-print(display(phase_plot[re_for_plot],
-              phase_inviscid_resonance_plot[re_for_plot],
-              phase_viscous_resonance_plot[re_for_plot]));
-
+print(display(phase_plot,
+              phase_inviscid_resonance_plot,
+              phase_viscous_resonance_plot));
 
 
 #------------------------------------------------------------------
@@ -664,36 +661,13 @@ end do;
 #---------------------------------------------------
 actual_sigma_h:=subs(Marc_parameters,sigma_0*H*sigma_h_factor);
 for re in re_list do
-    bla := getdata(phase_plot[re]);
-    nname := cat(currentdir(),"/phase_beta_tweak_factor",
+    bla := getdata(amplitude_plot[re]);
+    nname := cat(currentdir(),"/ampl_beta_tweak_factor",
        convert(beta_tweak_factor,string),"_sigma_h",
        convert(actual_sigma_h,string),"_re",convert(re,string),".dat");
     ExportMatrix(nname, bla[3]);
 end do;
 
-#---------------------------------------------------
-# Output eigenfrequence from viscous model
-#---------------------------------------------------
-actual_sigma_h:=subs(Marc_parameters,sigma_0*H*sigma_h_factor);
-for re in re_list do
-    bla := getdata(viscous_resonance_plot[re]);
-    nname := cat(currentdir(),"/viscous_eigen_frequency_beta_tweak_factor",
-       convert(beta_tweak_factor,string),"_sigma_h",
-       convert(actual_sigma_h,string),"_re",convert(re,string),".dat");
-    ExportMatrix(nname, bla[3]);
-end do;
-
-#---------------------------------------------------
-# Output eigenfrequence from inviscid model
-#---------------------------------------------------
-actual_sigma_h:=subs(Marc_parameters,sigma_0*H*sigma_h_factor);
-for re in re_list do
-    bla := getdata(inviscid_resonance_plot[re]);
-    nname := cat(currentdir(),"/inviscid_eigen_frequency_beta_tweak_factor",
-       convert(beta_tweak_factor,string),"_sigma_h",
-       convert(actual_sigma_h,string),"_re",convert(re,string),".dat");
-    ExportMatrix(nname, bla[3]);
-end do;
 
 
 #---------------------------------------------------
@@ -757,22 +731,6 @@ end do;
 display(seq(eigen_plot[re], re in re_list),
         seq(eigen_plot_with_symbol[re], re in re_list),
         seq(y_max_plot[re], re in re_list));
-
-
-
-#---------------------------------------------------
-# Plot decay rate as fct of sigma0 x H (for all Reynolds
-# numbers)
-#---------------------------------------------------
-#for re in re_list do
-#  damping_plot[re]:=loglogplot([seq([subs(base_sigma0_H*sigma_h_factor_list[i]),
-#                                     viscous_damping_for_plot[i][re]],
-#                            i = 1..numelems(sigma_h_factor_list))],
-#                            labels=["sigma_0 H","delta_damp"]);
-#end do;
-#display(seq(damping_plot[re], re in re_list));
-
-
 
 
 #---------------------------------------------------
